@@ -1,0 +1,38 @@
+version: "3"
+
+tasks:
+  default:
+    desc: List server tasks
+    cmds:
+      - task --list-all
+    silent: true
+
+  setup:
+    desc: Install deps, prepare the database, and build assets
+    cmds:
+      - mix setup
+
+  start:
+    desc: Start the Phoenix server inside IEx
+    cmds:
+      - iex -S mix phx.server
+
+  test:
+    desc: Run the server test suite
+    cmds:
+      - mix test
+
+  precommit:
+    desc: Run the server precommit validation
+    cmds:
+      - mix precommit
+
+  compile:
+    desc: Compile the server app
+    cmds:
+      - mix compile
+
+  deps:
+    desc: Fetch server dependencies
+    cmds:
+      - mix deps.get

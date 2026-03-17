@@ -57,6 +57,15 @@ defmodule MookServerWeb.Router do
     pipe_through :api_public
 
     get "/health", HealthController, :show
+
+    scope "/v1" do
+      get "/health", HealthController, :show
+
+      post "/auth/bootstrap", ApiAuthController, :bootstrap
+      post "/auth/login", ApiAuthController, :login
+      post "/auth/refresh", ApiAuthController, :refresh
+      post "/auth/logout", ApiAuthController, :logout
+    end
   end
 
   scope "/", MookServerWeb do

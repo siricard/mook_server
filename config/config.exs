@@ -80,7 +80,13 @@ config :spark,
 config :mook_server,
   ecto_repos: [MookServer.Repo],
   generators: [timestamp_type: :utc_datetime],
-  ash_domains: [MookServer.Accounts]
+  ash_domains: [
+    MookServer.Accounts,
+    MookServer.Communities,
+    MookServer.Messaging,
+    MookServer.Identity,
+    MookServer.Federation
+  ]
 
 # Configure the endpoint
 config :mook_server, MookServerWeb.Endpoint,

@@ -161,7 +161,7 @@ defmodule MookServer.Accounts.User do
       change set_attribute(:email, arg(:email))
 
       # Hashes the provided password
-      change AshAuthentication.Strategy.Password.HashPasswordChange
+      change {AshAuthentication.Strategy.Password.HashPasswordChange, strategy_name: :password}
 
       # Generates an authentication token for the user
       change AshAuthentication.GenerateTokenChange
@@ -172,6 +172,40 @@ defmodule MookServer.Accounts.User do
       metadata :token, :string do
         description "A JWT that can be used to authenticate the user."
         allow_nil? false
+      end
+    end
+
+    create :bootstrap_local_account do
+      description "Create the first local account for a fresh server deployment."
+
+      argument :email, :ci_string do
+        allow_nil? false
+      end
+
+      argument :password, :string do
+        description "The proposed password for the user, in plain text."
+        allow_nil? false
+        constraints min_length: 8
+        sensitive? true
+      end
+
+      argument :password_confirmation, :string do
+        description "The proposed password for the user (again), in plain text."
+        allow_nil? false
+        sensitive? true
+      end
+
+      change set_context(%{strategy_name: :password})
+      change set_attribute(:email, arg(:email))
+      change {AshAuthentication.Strategy.Password.HashPasswordChange, strategy_name: :password}
+      validate AshAuthentication.Strategy.Password.PasswordConfirmationValidation
+
+      change fn changeset, _context ->
+        Ash.Changeset.change_attribute(
+          changeset,
+          :confirmed_at,
+          DateTime.utc_now() |> DateTime.truncate(:microsecond)
+        )
       end
     end
 

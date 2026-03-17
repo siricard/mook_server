@@ -6,6 +6,7 @@ defmodule MookServer.Accounts do
   end
 
   resources do
+    resource MookServer.Accounts.Session
     resource MookServer.Accounts.Token
     resource MookServer.Accounts.User
   end
